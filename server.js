@@ -14,15 +14,8 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/Index.html');
 });
 
-app.get('/ext-api', function(req, res, next) {
-    request('http://www.mapquestapi.com/geocoding/v1/address?key=gHRAeLz8w9bYZ05A4pVgdiGTGPGAzCuV&street=1600+Pennsylvania+Ave+NW&city=Washington&state=DC&postalCode=20500', function(err, res, body){
-        if (!err && res.statusCode == 200) {
-            console.log(JSON.parse(body).results[0].locations[0].latLng) // Show the HTML for the Google homepage. 
-          }
-        })
-  });
 
-
+//endpoint for submitting address
 app.post('/submit-address', function(req, res) {
     var addr = '&street=' + req.body.addrLine1.replace(/\s/g, '+') + '+' + req.body.addrLine2.replace(/\s/g, '+') + '&city=' + req.body.city + '&state=' + req.body.state + '&postalCode=' + req.body.zip;
     var geocodeEndpoint = 'http://www.mapquestapi.com/geocoding/v1/address?key=gHRAeLz8w9bYZ05A4pVgdiGTGPGAzCuV' + addr
@@ -42,7 +35,15 @@ app.post('/submit-address', function(req, res) {
                 if (!err && response.statusCode == 200) {
                     console.log('Response from ISS api: ')
                     console.log(JSON.parse(body).response) // Show the HTML for the Google homepage. 
-                    res.send(JSON.parse(body).response)
+                    //res.setHeader('Content-Type', 'application/json');
+                    times = JSON.parse(body).response
+                    returnMsg = ''
+                    for(index = 0; index < times.length; index++){
+                        var thisdate = new Date(times[index].risetime)
+                        console.log('Time: ', thisdate)
+                        returnMsg += thisdate + ', \n'
+                    }
+                    res.send('The ISS will pass over (' + lat +',' + lng + ') at these times: ' + returnMsg)
                   }
                 })
           }
@@ -50,6 +51,7 @@ app.post('/submit-address', function(req, res) {
     //res.send('Failure:(');
 });
 
+//endpoint for submitting longitude and latitude coordinates
 app.post('/submit-to-iss-api',function (req, res) {
     var endpoint = 'http://api.open-notify.org/iss-pass.json?' //lat=LAT&lon=LON'
     //console.log('submitted coords')
@@ -62,7 +64,14 @@ app.post('/submit-to-iss-api',function (req, res) {
         if (!err && response.statusCode == 200) {
             console.log('Response from ISS api: ')
             console.log(JSON.parse(body).response) 
-            res.send(JSON.parse(body).response)
+            times = JSON.parse(body).response
+            returnMsg = ''
+            for(index = 0; index < times.length; index++){
+                var thisdate = new Date(times[index].risetime)
+                console.log('Time: ', thisdate)
+                returnMsg += thisdate + ', \n'
+            }
+            res.send('The ISS will pass over (' + lat +',' + lng + ') at these times: ' + returnMsg)
           }
         })
 
