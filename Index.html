@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    Enter the Location in the form of an Address
+    <form action="/submit-address" method="post">
+        Address Line 1: <input name="addrLine1" type="text" /> <br />
+        Address Line 2: <input name="addrLine2" type="text" /> <br />
+        City : <input name="city" type="text" /> <br />
+        State : <input name="state" type="text" /> <br />
+        Zip Code: <input name="zip" type="text" /> <br />
+        <input type="submit" />
+    </form>
+    Or, if you know the longitude and latitude coordinates, that works too
+    <form action="/submit-to-iss-api" method="post">
+        Longitude: <input name="longitude" type="text" /> <br />
+        Latitude: <input name="latitude" type="text" /> <br />
+        <input type="submit" />
+    </form>
+</body>
+</html>
